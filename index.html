@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script defer src="js/vue.js"></script>
+    <script defer src="js/vue.min.js"></script>
     <script defer src="js/main.js"></script>
     <link rel="stylesheet" href="css/main.css">
     <title>Product App</title>
@@ -27,12 +27,20 @@
                 <li v-for="detail in details">{{ detail }}</li>
             </ul>
             <div v-for="variant in variants" :key="variant.variantId">
-                <p>{{ variant.variantColor }}</p>
+                <p @mouseover="updateProduct(variant.variantImage)">
+                    {{ variant.variantColor }}
+                </p>
             </div>
             <h2>Available Sizes:</h2>
             <ul>
                 <li v-for="size in sizes" :key="size">{{ size }}</li>
             </ul>
+            <div class="cart">
+                <p>Cart({{ cart }})</p>
+            </div>
+            <button v-on:click="methods.addToCart">Add to cart</button>
+
+
         </div>
     </div>
 </div>
