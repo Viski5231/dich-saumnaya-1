@@ -93,13 +93,19 @@ Vue.component('product', {
         },
 
 
-        removeFromCart() {
+        removeFromCart(id) {
+            this.$emit('remove-from-cart');
             if (this.cart > 0) {
                 this.cart -= 1;
             }
         },
         updateProduct(index) {
             this.selectedVariant = index;
+        },
+        updateRemoveFromCart() {
+            if (this.cart > 0) {
+                this.cart -= 1;
+            }
         }
     },
     computed: {
@@ -133,6 +139,11 @@ let app = new Vue({
         updateCart(id)  {
             console.log('asd')
             this.cart.push(id)
+        },
+        updateRemoveFromCart(id) {
+            if (this.cart.length > 0) {
+                this.cart.pop(id);
+            }
         }
     }
 })
