@@ -1,5 +1,3 @@
-let product = "Socks";
-
 let app = new Vue({
     el: '#app',
     data: {
@@ -26,17 +24,18 @@ let app = new Vue({
         ],
         sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
         cart: 0,
-        methods: {
-            addToCart() {
-                console.log(this.cart);
-                this.cart += 1;
-                console.log(this.cart);
-            },
+    },
+    methods: {
+        addToCart() {
+            this.cart += 1;
+        },
+        removeFromCart() {
+            if (this.cart > 0) {
+                this.cart -= 1;
+            }
         },
         updateProduct(variantImage) {
-            this.image = variantImage
+            this.image = variantImage;
         }
-    }
-})
-
-
+    },
+});
