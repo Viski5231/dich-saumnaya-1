@@ -1,4 +1,27 @@
+Vue.component('product-details', {
+    props: {
+        details: {
+            type: Array,
+            required: true
+        }
+    },
+    template: `
+    <div>
+        <h2>Details:</h2>
+        <ul>
+            <li v-for="detail in details" :key="detail">{{ detail }}</li>
+        </ul>
+    </div>
+    `
+});
+
 Vue.component('product', {
+    props: {
+        premium: {
+            type: Boolean,
+            required: true
+        }
+    },
     template: `
     <div class="product">
         <div class="product-image">
@@ -12,9 +35,8 @@ Vue.component('product', {
             <p v-else style="text-decoration:line-through ">Out of Stock</p>
             <span v-if="onSale">On Sale</span>
             <p>{{ sale }}</p>
-            <ul>
-                <li v-for="detail in details">{{ detail }}</li>
-            </ul>
+            <product-details :details="details"></product-details>
+            <p>Shipping: {{ shipping }}</p>
             <div
                 class="color-box"
                 v-for="(variant, index) in variants"
@@ -26,9 +48,6 @@ Vue.component('product', {
             <ul>
                 <li v-for="size in sizes" :key="size">{{ size }}</li>
             </ul>
-            <div class="cart">
-                <p>Cart({{ cart }})</p>
-            </div>
             <button v-on:click="addToCart" :disabled="!inStock" :class="{ disabledButton: !inStock }">Add to cart</button>
             <button v-on:click="removeFromCart">Remove from cart</button>
         </div>
@@ -61,13 +80,19 @@ Vue.component('product', {
                 }
             ],
             sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
-            cart: 0,
+            cart: []
+
         }
     },
     methods: {
         addToCart() {
-            this.cart += 1;
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
         },
+        updateCart(id) {
+            this.cart.push(id);
+        },
+
+
         removeFromCart() {
             if (this.cart > 0) {
                 this.cart -= 1;
@@ -89,11 +114,25 @@ Vue.component('product', {
         },
         sale() {
             return this.onSale ? `${this.brand} ${this.product} is on sale!` : `${this.brand} ${this.product} is not on sale.`;
+        },
+        shipping() {
+            return this.premium ? "Free" : 2.99;
         }
     }
 });
 
-
 let app = new Vue({
     el: '#app',
+    data: {
+        premium: true,
+        inStock: true,
+        cart: []
+
+    },
+    methods: {
+        updateCart(id)  {
+            console.log('asd')
+            this.cart.push(id)
+        }
+    }
 })
