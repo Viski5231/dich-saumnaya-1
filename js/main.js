@@ -1,19 +1,4 @@
 // Создаем экземпляр Vue, который будет использоваться как шина событий для обмена данными между компонентами
-
-//реактивность-это способ фреймворка отслеживать изменения в данных и автоматически обновлять интерфейс.
-//eventBus-ипользуется для передачи событий между компонентами.
-//event name-это имя события а payload это данные которые вы хотите передать родительскому компоненту
-//v-if-специальные атрибуты которые добавляют реактивность и управление отображения
-//Vue component используется для регистрации нового компонента
-//teamplate определяет html шаблон для компонента
-//дата функция возвращающая объект с данными компонента
-//метод объект содержащий функции
-
-
-
-
-
-// Создаем экземпляр Vue, который будет использоваться как шина событий для обмена данными между компонентами
 let eventBus = new Vue();
 
 // Компонент для отображения вкладок с информацией о продукте
@@ -192,13 +177,16 @@ Vue.component('product', {
                     <img :src="image" :alt="altText"/>
                 </div>
                 <div class="product-info">
-                    <h1>{{ title }}</h1>
+                    <h <h1>{{ title }}</h1>
                     <p>{{ description }}</p>
+                    <p>Price: {{ price }}$</p>
+                    <p v-if="discountPercentage > 0">Discount: {{ discountPercentage }}%</p>
                     <a :href="link">More products like this</a>
                     <p v-if="inStock">In stock</p>
                     <p v-else style="text-decoration: line-through">Out of Stock</p>
-                    <span v-if="onSale"> On Sale </span <br><br>
+                    <span v-if="onSale"> On Sale </span><br><br>
                     <p>{{ sale }}</p>
+                    <p>Average Rating: {{ averageRating }}</p>
                     <div
                         class="color-box"
                         v-for="(variant, index) in variants"
@@ -245,7 +233,9 @@ Vue.component('product', {
                 }
             ],
             sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'], // Доступные размеры
-            cart: [] // Корзина для хранения добавленных товаров
+            cart: [], // Корзина для хранения добавленных товаров
+            price: 5, // Цена продукта
+            discountPercentage: 10 // Процент скидки
         }
     },
     methods: {
@@ -264,6 +254,11 @@ Vue.component('product', {
         addReview(productReview) {
             // Добавляем отзыв о продукте
             this.reviews.push(productReview);
+        },
+        calculateAverageRating() {
+            if (this.reviews.length === 0) return 0;
+            const totalRating = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+            return (totalRating / this.reviews.length).toFixed(1);
         }
     },
     mounted() {
@@ -294,6 +289,10 @@ Vue.component('product', {
         shipping() {
             // Возвращаем стоимость доставки в зависимости от статуса премиум-клиента
             return this.premium ? "Free" : "2.99";
+        },
+        averageRating() {
+            // Вычисляем средний рейтинг на основе отзывов
+            return this.calculateAverageRating();
         }
     }
 });
@@ -311,8 +310,10 @@ let app = new Vue({
             this.cart.push(id);
         },
         updateRemoveFromCart() {
-            // Удаляем последний добавленный товар из корзины if (this.cart.length > 0) {
-            this.cart.pop();
+            // Удаляем последний добавленный товар из корзины
+            if (this.cart.length > 0) {
+                this.cart.pop();
+            }
         }
     },
 });
